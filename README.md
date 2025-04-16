@@ -2,6 +2,8 @@
 
 Um jogo da velha (Tic-Tac-Toe) simples, bonito e moderno, feito com HTML, CSS e JavaScript — 100% responsivo e jogável direto do navegador.
 
+[Acesse em:](https://giipeixoto.github.io/jogo-da-velha/)
+
 ## 💡 Funcionalidades
 
 - Interface estilizada com cores vibrantes e responsivas
