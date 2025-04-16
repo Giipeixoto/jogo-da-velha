@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Jogo da Velha</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    body {
+      background: linear-gradient(135deg, #4f46e5, #3b82f6);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      color: #fff;
+    }
+
+    .container {
+      text-align: center;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+      font-size: 2.5rem;
+      color: #ffffff;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+    }
+
+    .board {
+      display: grid;
+      grid-template-columns: repeat(3, 100px);
+      grid-gap: 12px;
+      justify-content: center;
+      margin: 0 auto;
+    }
+
+    .cell {
+      width: 100px;
+      height: 100px;
+      background-color: #ffffff20;
+      border: 2px solid #ffffff50;
+      border-radius: 12px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 2.5rem;
+      color: #fff;
+      transition: 0.3s;
+      cursor: pointer;
+    }
+
+    .cell:hover {
+      background-color: #ffffff30;
+    }
+
+    .disabled {
+      pointer-events: none;
+      opacity: 0.6;
+    }
+
+    .status {
+      margin-top: 20px;
+      font-size: 1.2rem;
+    }
+
+    .restart-btn {
+      margin-top: 20px;
+      padding: 10px 20px;
+      background: #fff;
+      color: #3b82f6;
+      font-weight: bold;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .restart-btn:hover {
+      background: #e0e0e0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Jogo da Velha</h1>
+    <div class="board" id="board"></div>
+    <div class="status" id="status">Vez do jogador: X</div>
+    <button class="restart-btn" onclick="restartGame()">Reiniciar</button>
+  </div>
+
+  <script>
+    let board = ["", "", "", "", "", "", "", "", ""];
+    let currentPlayer = "X";
+    let gameOver = false;
+
+    const winPatterns = [
+      [0, 1, 2], [3, 4, 5], [6, 7, 8], // linhas
+      [0, 3, 6], [1, 4, 7], [2, 5, 8], // colunas
+      [0, 4, 8], [2, 4, 6]             // diagonais
+    ];
+
+    const boardEl = document.getElementById("board");
+    const statusEl = document.getElementById("status");
+
+    function drawBoard() {
+      boardEl.innerHTML = "";
+      board.forEach((cell, index) => {
+        const cellEl = document.createElement("div");
+        cellEl.className = "cell";
+        cellEl.textContent = cell;
+        if (!gameOver && cell === "") {
+          cellEl.addEventListener("click", () => makeMove(index));
+        } else {
+          cellEl.classList.add("disabled");
+        }
+        boardEl.appendChild(cellEl);
+      });
+    }
+
+    function makeMove(index) {
+      if (board[index] !== "" || gameOver) return;
+      board[index] = currentPlayer;
+      checkWinner();
+      currentPlayer = currentPlayer === "X" ? "O" : "X";
+      if (!gameOver) statusEl.textContent = `Vez do jogador: ${currentPlayer}`;
+      drawBoard();
+    }
+
+    function checkWinner() {
+      for (let pattern of winPatterns) {
+        const [a, b, c] = pattern;
+        if (board[a] && board[a] === board[b] && board[a] === board[c]) {
+          statusEl.textContent = `Jogador ${board[a]} venceu!`;
+          gameOver = true;
+          return;
+        }
+      }
+
+      if (!board.includes("")) {
+        statusEl.textContent = "Empate!";
+        gameOver = true;
+      }
+    }
+
+    function restartGame() {
+      board = ["", "", "", "", "", "", "", "", ""];
+      currentPlayer = "X";
+      gameOver = false;
+      statusEl.textContent = `Vez do jogador: ${currentPlayer}`;
+      drawBoard();
+    }
+
+    drawBoard();
+  </script>
+</body>
+</html>
